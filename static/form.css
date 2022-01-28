@@ -1,0 +1,46 @@
+#items {
+	display: grid;
+	grid-template-columns: 1fr 2em 1fr;
+	justify-items: center;
+	align-items: center;
+	max-width: 900px;
+	overflow: auto;
+	margin: 0px auto;
+}
+
+.icon {
+	width: 1em;
+	background: #fff;
+	border-radius: 100%;
+}
+
+.from {
+	justify-self: right;
+	text-align: right;
+}
+
+.to {
+	justify-self: left;
+	text-align: left;
+}
+
+.from, .arrow, .to {
+	font-size: 125%;
+	overflow-wrap: anywhere;
+}
+
+.details, .comment {
+	grid-column-start: 1;
+	grid-column-end: 5;
+	text-align: center;
+	align-items: center;
+	margin: 0.2em 0px 1.5em;
+}
+
+.details > *, .comment > * {
+	vertical-align: middle;
+}
+
+.comment {
+	margin: -1.3em 0px 1.5em;
+}

@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+	<head>
+		{% block head %}
+			<title>{% block title %}Move History{% endblock %}</title>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<link rel="stylesheet" href="/static/base.css" />
+		{% endblock %}
+	</head>
+	<body>
+		<h1>Move History</h1>
+		<main>{% block content %}{% endblock %}</main>
+	</body>
+</html>

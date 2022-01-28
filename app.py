@@ -11,9 +11,6 @@ config.read('config.ini')
 
 @app.route('/')
 def movehist():
-	def decode_bytes(x):
-		return x.decode() if x else None
-	
 	def display_page_name(namespace, title):
 		if namespace == None or title == None:
 			return None
@@ -63,7 +60,7 @@ def movehist():
 		return (query['namespaces'], namespace_numbers)
 
 	if 'page' not in request.args:
-		return 'Page required.'
+		return render_template('form.html')
 
 	page_title = request.args['page']
 	page_ns_name = ''
@@ -120,20 +117,21 @@ ORDER BY log_timestamp DESC
 
 		items.append({
 			'type': 'move',
-			'from': display_page_name(move_entry[2], decode_bytes(move_entry[3])),
-			'to': decode_bytes(to_page),
-			'time': dateutil.parser.parse(decode_bytes(move_entry[0])),
-			'user': decode_bytes(move_entry[1]),
-			'comment': decode_bytes(move_entry[4]),
+			'from': display_page_name(move_entry[2], move_entry[3].decode()),
+			'to': to_page.decode(),
+			'time': dateutil.parser.parse(move_entry[0].decode()),
+			'user': move_entry[1].decode(),
+			'comment': move_entry[4].decode(),
 			'id': str(move_entry[6])
 		})
 
 	return render_template(
-		'index.html',
+		'result.html',
 		items = items,
 		project_url = project_url,
 		page = display_page_name(page_ns, page_title),
-		page_id = str(page_id)
+		page_id = str(page_id),
+		raw_page = request.args['page']
 	)
 
 if __name__ == '__main__':
