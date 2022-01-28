@@ -2,7 +2,7 @@
 
 {% block content %}
 	<form>
-		<input name="page"{% if raw_page %} value={{raw_page}}{% endif %} />
+		<input name="page"{% if raw_page %} value="{{raw_page}}"{% endif %} />
 		<input type="submit" value="Submit" />
 	</form>
 {% endblock %}
