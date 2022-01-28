@@ -152,4 +152,4 @@ ORDER BY log_timestamp DESC
 	)
 
 if __name__ == '__main__':
-	app.run(debug = True)
+	app.run(debug = config.getboolean('General', 'dev'))
