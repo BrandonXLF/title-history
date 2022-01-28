@@ -1,7 +1,9 @@
 import mysql.connector
 import requests
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, escape
 import dateutil.parser
+import re
+import urllib.parse
 import phpserialize
 from configparser import ConfigParser
 
@@ -58,6 +60,21 @@ def movehist():
 			namespace_numbers[namespace_alias['alias']] = namespace_alias['id']
 
 		return (query['namespaces'], namespace_numbers)
+
+	def replace_brackets(match):
+		break_match = re.search(r'(.+?)\|(.+)', match.group(1))
+		target = match.group(1)
+		text = match.group(1)
+		
+		if break_match:
+			target = break_match.group(1)
+			text = break_match.group(2)
+			
+		return f'<a href="{project_url}/wiki/{urllib.parse.quote(target)}" target="_blank">{text}</a>'
+
+	def process_comment(text):
+		text = escape(text)
+		return re.sub(r'\[\[(.+?)\]\]', replace_brackets, text)
 
 	if 'page' not in request.args:
 		return render_template('form.html')
@@ -121,7 +138,7 @@ ORDER BY log_timestamp DESC
 			'to': to_page.decode(),
 			'time': dateutil.parser.parse(move_entry[0].decode()),
 			'user': move_entry[1].decode(),
-			'comment': move_entry[4].decode(),
+			'comment': move_entry[4].decode() and process_comment(move_entry[4].decode()),
 			'id': str(move_entry[6])
 		})
 
