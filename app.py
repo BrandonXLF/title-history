@@ -112,14 +112,41 @@ def movehist():
 	page_id = page_info[0]
 	
 	query = '''
-SELECT revision.rev_timestamp, actor_name, log_namespace, log_title, comment_text, log_params, log_id FROM revision
-JOIN page ON page_id = rev_page AND page_namespace = %s AND page_title = %s
-# log entry might have a larger timestamp than the revision entry since it's added after
-JOIN logging_userindex ON log_actor = rev_actor AND (log_timestamp = rev_timestamp OR log_timestamp = rev_timestamp + 1) AND log_type = 'move'
-JOIN revision AS revision_parent ON revision_parent.rev_id = revision.rev_parent_id AND revision_parent.rev_len = revision.rev_len
-LEFT JOIN comment_logging ON log_comment_id = comment_id
-LEFT JOIN actor_logging ON log_actor = actor_id
-ORDER BY log_timestamp DESC
+SELECT
+	revision.rev_timestamp,
+	actor_name,
+	log_namespace,
+	log_title,
+	comment_revision.comment_text,
+	comment_logging.comment_text,
+	log_params,
+	log_id
+FROM
+	revision
+JOIN page ON
+	page_id = rev_page
+	AND page_namespace = %s
+	AND page_title = %s
+# make sure revision didn't change the page's content
+JOIN revision AS revision_parent
+	ON revision_parent.rev_id = revision.rev_parent_id
+	AND revision_parent.rev_sha1 = revision.rev_sha1
+JOIN comment_revision ON
+	revision.rev_comment_id = comment_revision.comment_id
+JOIN logging_userindex ON
+	log_actor = revision.rev_actor
+	# log entry might have a larger timestamp than the revision entry since it's added after
+	AND (
+		log_timestamp = revision.rev_timestamp
+		OR log_timestamp = revision.rev_timestamp + 1
+	)
+	AND log_type = 'move'
+LEFT JOIN comment_logging ON
+	log_comment_id = comment_logging.comment_id
+LEFT JOIN actor_logging ON
+	log_actor = actor_id
+ORDER BY
+	log_timestamp DESC
 '''
 
 	cursor.execute(query, (page_ns, page_title))
@@ -127,19 +154,27 @@ ORDER BY log_timestamp DESC
 	items = []
 
 	for move_entry in move_entries:
+		from_page = display_page_name(move_entry[2], move_entry[3].decode())
+		
 		try:
-			to_page = phpserialize.loads(move_entry[5])[b'4::target']
+			to_page = phpserialize.loads(move_entry[6])[b'4::target']
 		except:
-			to_page = move_entry[5]
+			to_page = move_entry[6].decode()
+
+		revision_comment = move_entry[4].decode()
+		
+		if ('[[' + from_page + ']]' not in revision_comment or
+			'[[' + to_page + ']]' not in revision_comment):
+			continue
 
 		items.append({
 			'type': 'move',
-			'from': display_page_name(move_entry[2], move_entry[3].decode()),
-			'to': to_page.decode(),
+			'from': from_page,
+			'to': to_page,
 			'time': dateutil.parser.parse(move_entry[0].decode()),
 			'user': move_entry[1].decode(),
-			'comment': move_entry[4].decode() and process_comment(move_entry[4].decode()),
-			'id': str(move_entry[6])
+			'comment': move_entry[5].decode() and process_comment(move_entry[5].decode()),
+			'id': str(move_entry[7])
 		})
 
 	return render_template(
