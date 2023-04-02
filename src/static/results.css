@@ -1,7 +1,3 @@
-#result-title > * {
-	vertical-align: middle;
-}
-
 #page-id {
 	color: #666;
 	font-weight: normal;
@@ -10,6 +6,11 @@
 
 #permalink {
 	color: black;
+}
+
+#permalink > svg {
+	width: 1em;
+	vertical-align: text-bottom;
 }
 
 #items {
@@ -33,16 +34,22 @@
 }
 
 .icon {
-	width: 1em;
+	width: 1.15em;
 }
 
 .move {
 	font-size: 90%;
-	line-height: 1.25;
+	line-height: 1.5em;
 }
 
-.move > * > * {
-	vertical-align: middle;
+.detail {
+	display: flex;
+	gap: 4px;
+	align-items: start;
+}
+
+.detail > svg {
+	margin: 0.175em 0;
 }
 
 .edge-dot {
