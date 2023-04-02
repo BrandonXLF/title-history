@@ -40,52 +40,58 @@
 				</svg>
 			</a>
 		</h2>
-		<div id="items">
-			{% for item in items %}
-				{{entryPage(item.to)}}
-				<div></div>
-				<div class="move">
-					<div class="detail">
-						<svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none">
-							<title>Date</title>
-							<circle cx="12" cy="12" r="9" />
-							<polyline points="12 7 12 12 15 15" />
-						</svg>
-						<a href="{{project_url}}/wiki/Special:Log?logid={{item.id}}" target="_blank">
-							{{item.time}}
-						</a>
-					</div>
-					<div class="detail">
-						<svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none">
-							<title>User</title>
-							<circle cx="12" cy="7" r="4" />
-							<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
-						</svg>
-						<a href="{{project_url}}/wiki/User:{{item.user|urlencode}}" target="_blank">
-							{{item.user}}
-						</a>
-					</div>
-					{% if item.comment %}
+		{% if items %}
+			<div id="items">
+				{% for item in items %}
+					{{entryPage(item.to)}}
+					<div></div>
+					<div class="move">
 						<div class="detail">
-							<svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" stroke-width="1.4" stroke="currentColor" fill="none">
-								<title>Comment</title>
-								<path d="M4 21v-13a3 3 0 0 1 3 -3h10a3 3 0 0 1 3 3v6a3 3 0 0 1 -3 3h-9l-4 4" />
-								<line x1="8" y1="9" x2="16" y2="9" />
-								<line x1="8" y1="13" x2="14" y2="13" />
+							<svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none">
+								<title>Date</title>
+								<circle cx="12" cy="12" r="9" />
+								<polyline points="12 7 12 12 15 15" />
 							</svg>
-							<span>{{item.comment|safe}}</span>
+							<a href="{{project_url}}/wiki/Special:Log?logid={{item.id}}" target="_blank">
+								{{item.time}}
+							</a>
+						</div>
+						<div class="detail">
+							<svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none">
+								<title>User</title>
+								<circle cx="12" cy="7" r="4" />
+								<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+							</svg>
+							<a href="{{project_url}}/wiki/User:{{item.user|urlencode}}" target="_blank">
+								{{item.user}}
+							</a>
+						</div>
+						{% if item.comment %}
+							<div class="detail">
+								<svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" stroke-width="1.4" stroke="currentColor" fill="none">
+									<title>Comment</title>
+									<path d="M4 21v-13a3 3 0 0 1 3 -3h10a3 3 0 0 1 3 3v6a3 3 0 0 1 -3 3h-9l-4 4" />
+									<line x1="8" y1="9" x2="16" y2="9" />
+									<line x1="8" y1="13" x2="14" y2="13" />
+								</svg>
+								<span>{{item.comment|safe}}</span>
+							</div>
+						{% endif %}
+					</div>
+					{% if loop.last or item.gap %}
+						{{entryPage(item.from)}}
+					{% endif %}
+					{% if item.gap %}
+						<div class="gap">
+							Gap in move history
 						</div>
 					{% endif %}
+				{% endfor %}
+			{% else %}
+				<div>
+					No move history found.
 				</div>
-				{% if loop.last or item.gap %}
-					{{entryPage(item.from)}}
-				{% endif %}
-				{% if item.gap %}
-					<div class="gap">
-						Gap in move history
-					</div>
-				{% endif %}
-			{% endfor %}
+			{% endif %}
 		</div>
 	</article>
 	<script src="/static/results.js"></script>
