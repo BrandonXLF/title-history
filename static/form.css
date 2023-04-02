@@ -22,7 +22,7 @@
 	width: 1em;
 }
 
-.move * {
+.move > * > * {
 	vertical-align: middle;
 }
 
