@@ -163,7 +163,7 @@ def movehist():
 		try:
 			to_page = phpserialize.loads(move_entry[6])[b'4::target']
 		except:
-			to_page = move_entry[6].decode()
+			to_page = move_entry[6].decode().partition('\n')[0]
 
 		revision_comment = move_entry[4].decode()
 		
