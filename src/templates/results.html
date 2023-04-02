@@ -16,7 +16,7 @@
 	<link rel="stylesheet" href="/static/results.css" />
 {% endblock %}
 
-{% block title %}Move History for {{raw_page}}{% endblock %}
+{% block title %}Move History for {{page}}{% endblock %}
 
 {% block content %}
 	{{super()}}
@@ -25,7 +25,7 @@
 			<span>
 				<span>Move History for</span>
 				<a href="{{project_url}}/wiki/{{page|urlencode}}" target="_blank">
-					{{raw_page}}
+					{{page}}
 				</a>
 				<span id="page-id">
 					Page ID: {{page_id}}

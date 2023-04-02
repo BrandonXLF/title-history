@@ -9,8 +9,9 @@
 	<p>
 		Search through a Wikipedia page's history to see when the page has been moved.
 	</p>
-	<form>
-		<input name="page"{% if raw_page %} value="{{raw_page}}"{% endif %} />
+	<form action="/get">
+		<input placeholder="Project" name="project"{% if page %} value="{{project}}"{% endif %} />
+		<input placeholder="Page" name="page"{% if page %} value="{{page}}"{% endif %} />
 		<input type="submit" value="Submit" />
 	</form>
 {% endblock %}

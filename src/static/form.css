@@ -5,3 +5,7 @@ input {
 input + input {
 	margin-left: 8px;
 }
+
+article {
+	margin-top: 2em;
+}
