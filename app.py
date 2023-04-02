@@ -1,8 +1,9 @@
 import mysql.connector
 import requests
 from flask import Flask, request, render_template, escape
-import dateutil.parser
+from datetime import datetime
 import re
+import os
 import urllib.parse
 import phpserialize
 from configparser import ConfigParser
@@ -170,11 +171,13 @@ def movehist():
 			not (to_page in revision_comment or ('[[' + to_page + ']]' in revision_comment))):
 			continue
 
+		time = datetime.strptime(move_entry[0].decode(), '%Y%m%d%H%M%S')
+
 		items.append({
 			'type': 'move',
 			'from': from_page,
 			'to': to_page,
-			'time': dateutil.parser.parse(move_entry[0].decode()),
+			'time': f'{time:%#I:%M:%S %p, %#d %B %Y}' if os.name == 'nt' else f'{time:%-I:%M:%S %p, %-d %B %Y}',
 			'user': move_entry[1].decode(),
 			'comment': move_entry[5].decode() and process_comment(move_entry[5].decode()),
 			'id': str(move_entry[7])
