@@ -13,3 +13,7 @@ main > *,
 article > * {
 	margin: 1rem 0;
 }
+
+h1 > a {
+	color: black;
+}
