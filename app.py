@@ -152,6 +152,7 @@ ORDER BY
 	cursor.execute(query, (page_ns, page_title))
 	move_entries = cursor.fetchall()
 	items = []
+	prev_from = None
 
 	for move_entry in move_entries:
 		from_page = display_page_name(move_entry[2], move_entry[3].decode())
@@ -163,8 +164,8 @@ ORDER BY
 
 		revision_comment = move_entry[4].decode()
 		
-		if ('[[' + from_page + ']]' not in revision_comment or
-			'[[' + to_page + ']]' not in revision_comment):
+		if (not (from_page in revision_comment or '[[' + from_page + ']]' in revision_comment) or
+			not (to_page in revision_comment or ('[[' + to_page + ']]' in revision_comment))):
 			continue
 
 		items.append({
@@ -176,6 +177,11 @@ ORDER BY
 			'comment': move_entry[5].decode() and process_comment(move_entry[5].decode()),
 			'id': str(move_entry[7])
 		})
+		
+		if prev_from and prev_from != to_page:
+			items[len(items) - 2]['gap'] = True
+		
+		prev_from = from_page
 
 	return render_template(
 		'result.html',
