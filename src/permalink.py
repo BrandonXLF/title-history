@@ -89,7 +89,7 @@ def permalink(project, page_id):
 		from_page = formatter.format_title(move_entry[2], move_entry[3].decode())
 		
 		try:
-			to_page = phpserialize.loads(move_entry[6])[b'4::target']
+			to_page = phpserialize.loads(move_entry[6])[b'4::target'].decode()
 		except:
 			to_page = move_entry[6].decode().partition('\n')[0]
 
