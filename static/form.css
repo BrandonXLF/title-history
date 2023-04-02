@@ -22,6 +22,11 @@
 	width: 1em;
 }
 
+.move {
+	font-size: 90%;
+	line-height: 1.25;
+}
+
 .move > * > * {
 	vertical-align: middle;
 }
