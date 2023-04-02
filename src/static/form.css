@@ -1,9 +1,14 @@
-input {
-	padding: 4px 8px;
+form {
+	margin-top: 0;
 }
 
-input + input {
-	margin-left: 8px;
+input {
+	padding: 4px 8px;
+	margin: 1rem 8px 0 0;
+}
+
+input:last-child {
+	margin-right: 0;
 }
 
 article {

@@ -1,7 +1,6 @@
 body {
 	font-family: sans-serif;
-	max-width: 900px;
-	margin-left: min(100px, 10vw);
+	margin: 8px min(100px, 10vw);
 }
 
 a {
@@ -11,9 +10,15 @@ a {
 body > *,
 main > *,
 article > * {
-	margin: 1rem 0;
+	margin: 1rem 0 0 0;
 }
 
 h1 > a {
 	color: black;
+}
+
+@media (max-width: 400px) {
+	body {
+		margin: 8px 1rem;
+	}
 }
