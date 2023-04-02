@@ -1,7 +1,15 @@
 body {
 	font-family: sans-serif;
+	max-width: 900px;
+	margin-left: min(100px, 10vw);
 }
 
 a {
 	text-decoration: none;
+}
+
+body > *,
+main > *,
+article > * {
+	margin: 1rem 0;
 }
