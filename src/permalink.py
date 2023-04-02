@@ -46,7 +46,7 @@ def permalink(project, page_id):
 	cursor.execute(
 		'''
 		SELECT
-			revision.rev_timestamp,
+			log_timestamp,
 			actor_name,
 			log_namespace,
 			log_title,
@@ -55,27 +55,27 @@ def permalink(project, page_id):
 			log_params,
 			log_id
 		FROM
-			revision
+			revision_userindex AS rev
 		# make sure revision didn't change the page's content
-		JOIN revision AS revision_parent
-			ON revision_parent.rev_id = revision.rev_parent_id
-			AND revision_parent.rev_sha1 = revision.rev_sha1
+		JOIN revision_userindex AS p_rev
+			ON p_rev.rev_id = rev.rev_parent_id
+			AND p_rev.rev_sha1 = rev.rev_sha1
 		JOIN comment_revision ON
-			revision.rev_comment_id = comment_revision.comment_id
+			rev.rev_comment_id = comment_revision.comment_id
 		JOIN logging_userindex ON
-			log_actor = revision.rev_actor
+			log_type = 'move'
+			AND log_actor = rev.rev_actor
 			# log entry might have a larger timestamp than the revision entry since it's added after
 			AND (
-				log_timestamp = revision.rev_timestamp
-				OR log_timestamp = revision.rev_timestamp + 1
+				log_timestamp = rev.rev_timestamp
+				OR log_timestamp = rev.rev_timestamp + 1
 			)
-			AND log_type = 'move'
-		LEFT JOIN comment_logging ON
+		JOIN comment_logging ON
 			log_comment_id = comment_logging.comment_id
-		LEFT JOIN actor_logging ON
+		JOIN actor_logging ON
 			log_actor = actor_id
 		WHERE
-			revision.rev_page = %s
+			rev.rev_page = %s
 		ORDER BY
 			log_timestamp DESC
 		''',
