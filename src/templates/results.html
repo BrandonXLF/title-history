@@ -19,14 +19,14 @@
 	<link rel="stylesheet" href="/static/results.css" />
 {% endblock %}
 
-{% block title %}Move History for {{page}}{% endblock %}
+{% block title %}Title History for {{page}}{% endblock %}
 
 {% block content %}
 	{{super()}}
 	<article>
 		<h2 id="result-title">
 			<span>
-				<span>Move History for</span>
+				<span>Title History for</span>
 				<a href="{{project_url}}/wiki/{{page|urlencode}}" target="_blank">
 					{{page}}
 				</a>
@@ -92,7 +92,7 @@
 				{% endfor %}
 			{% else %}
 				<div>
-					No move history found.
+					No previous titles.
 				</div>
 			{% endif %}
 		</div>
