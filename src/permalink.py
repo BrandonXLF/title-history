@@ -3,9 +3,13 @@ from flask import render_template
 from datetime import datetime
 import os
 import phpserialize
+import re
 from .projectinfo import get_project_info
 from .projectformatter import ProjectFormatter
 from .config import config
+
+def page_in_comment(page, comment):
+	return re.compile('(\[\[| |^)' + re.escape(page) + '(\]\]| |$)').search(comment)
 
 def permalink(project, page_id):
 	project_info = get_project_info(config, project)
@@ -93,10 +97,10 @@ def permalink(project, page_id):
 		except:
 			to_page = move_entry[6].decode().partition('\n')[0]
 
-		revision_comment = move_entry[4].decode()
-		
-		if (not (from_page in revision_comment or '[[' + from_page + ']]' in revision_comment) or
-			not (to_page in revision_comment or ('[[' + to_page + ']]' in revision_comment))):
+		rev_comment = move_entry[4].decode()
+
+		# Filter out talk pages and subpages moved at the same time
+		if not page_in_comment(from_page, rev_comment) or not page_in_comment(to_page, rev_comment):
 			continue
 
 		time = datetime.strptime(move_entry[0].decode(), '%Y%m%d%H%M%S')
