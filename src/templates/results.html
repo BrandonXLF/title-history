@@ -1,7 +1,10 @@
 {% extends "form.html" %}
 
-{% macro entryPage(page) %}
-	<svg xmlns="http://www.w3.org/2000/svg" class="icon edge-dot" viewBox="0 0 24 20" stroke-width="0" fill="#4e5aed" aria-hidden="true">
+{% macro entryPage(page, title) %}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon edge-dot" viewBox="0 0 24 20" stroke-width="0" fill="#4e5aed">
+		<title>
+			{{title}}
+		</title>
 		<circle cx="12" cy="10" r="6"></circle>
 	</svg>
 	<div class="page">
@@ -43,7 +46,7 @@
 		{% if items %}
 			<div id="items">
 				{% for item in items %}
-					{{entryPage(item.to)}}
+					{{entryPage(item.to, 'Moved to')}}
 					<div></div>
 					<div class="move">
 						<div class="detail">
@@ -79,7 +82,7 @@
 						{% endif %}
 					</div>
 					{% if loop.last or item.gap %}
-						{{entryPage(item.from)}}
+						{{entryPage(item.from, 'Started as')}}
 					{% endif %}
 					{% if item.gap %}
 						<div class="gap">
