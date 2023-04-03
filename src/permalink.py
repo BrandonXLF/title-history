@@ -41,6 +41,9 @@ def permalink(project, page_id):
 	
 	page_name = formatter.format_title(page_info[0], page_info[1].decode())
 
+	# Considerations:
+	# - Compare against parent revision to make sure content hasn't changed
+	# - Log entry might have a larger timestamp than the revision since it's added after
 	cursor.execute(
 		'''
 		SELECT
@@ -52,30 +55,36 @@ def permalink(project, page_id):
 			comment_logging.comment_text,
 			log_params,
 			log_id
-		FROM
-			revision_userindex AS rev
-		# make sure revision didn't change the page's content
-		JOIN revision_userindex AS p_rev
-			ON p_rev.rev_id = rev.rev_parent_id
-			AND p_rev.rev_sha1 = rev.rev_sha1
+		FROM (
+			SELECT *
+			FROM revision_userindex
+			JOIN logging_userindex ON
+				log_type = 'move'
+				AND log_actor = rev_actor
+				AND log_timestamp = rev_timestamp
+			UNION SELECT *
+			FROM revision_userindex
+			JOIN logging_userindex ON
+				log_type = 'move'
+				AND log_actor = rev_actor
+				AND log_timestamp = CAST(CAST(rev_timestamp AS DATETIME) + 1 AS BINARY)
+		) AS rev_log
 		JOIN comment_revision ON
-			rev.rev_comment_id = comment_revision.comment_id
-		JOIN logging_userindex ON
-			log_type = 'move'
-			AND log_actor = rev.rev_actor
-			# log entry might have a larger timestamp than the revision entry since it's added after
-			AND (
-				log_timestamp = rev.rev_timestamp
-				OR log_timestamp = rev.rev_timestamp + 1
-			)
+			rev_log.rev_comment_id = comment_revision.comment_id
 		JOIN comment_logging ON
 			log_comment_id = comment_logging.comment_id
 		JOIN actor_logging ON
 			log_actor = actor_id
 		WHERE
-			rev.rev_page = %s
-		ORDER BY
-			log_timestamp DESC
+			rev_log.rev_page = %s
+			AND EXISTS (
+				SELECT *
+				FROM revision_userindex AS p_rev
+				WHERE
+					p_rev.rev_id = rev_log.rev_parent_id
+					AND p_rev.rev_sha1 = rev_log.rev_sha1
+			)
+		ORDER BY log_timestamp DESC
 		''',
 		(page_id,)
 	)
