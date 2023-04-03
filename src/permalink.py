@@ -1,5 +1,5 @@
 import mysql.connector
-from flask import render_template
+from flask import render_template, abort
 from datetime import datetime
 import os
 import phpserialize
@@ -15,10 +15,7 @@ def permalink(project, page_id):
 	project_info = get_project_info(config, project)
 
 	if not project_info:
-		return render_template(
-			'error.html',
-			error = f'Project {project} does not exist.'
-		)
+		abort(404, f'Project {project} does not exist.')
 
 	(project_db, project_url) = project_info
 	formatter = ProjectFormatter(project_url)
@@ -40,10 +37,7 @@ def permalink(project, page_id):
 	page_info = cursor.fetchone()
 	
 	if not page_info:
-		return render_template(
-			'error.html',
-			error = f'Page with ID {page_id} does not exist.'
-		)
+		abort(404, f'Page with ID {page_id} does not exist.')
 	
 	page_name = formatter.format_title(page_info[0], page_info[1].decode())
 
