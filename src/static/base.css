@@ -1,3 +1,7 @@
+:focus {
+	outline-color: #4e5aed;
+}
+
 body {
 	font-family: sans-serif;
 	margin: 8px min(100px, 10vw);

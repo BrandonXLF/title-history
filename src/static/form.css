@@ -5,10 +5,32 @@ form {
 input {
 	padding: 4px 8px;
 	margin: 1rem 8px 0 0;
+	border: 1px solid #999;
+	border-radius: 3px;
+	outline-color: transparent;
+	transition: outline-color .25s, border-color .25s;
+}
+
+input[type="submit"] {
+	background: #4e5aed;
+	border-color: #4e5aed;
+	color: #fff;
+	cursor: pointer;
 }
 
 input:last-child {
 	margin-right: 0;
+}
+
+input:focus {
+	outline: 2px solid #4e5aed;
+	outline-offset: -2px;
+	border-color: #4e5aed;
+}
+
+input[type="submit"]:focus {
+	outline: 1px solid white;
+	outline-offset: -3px;
 }
 
 article {
