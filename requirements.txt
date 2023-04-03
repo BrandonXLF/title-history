@@ -1,0 +1,4 @@
+cachelib
+configparser
+flask
+mysql-connector-python
