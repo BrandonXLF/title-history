@@ -53,7 +53,7 @@ def permalink(project, page_id):
 			log_namespace,
 			log_title,
 			comment_revision.comment_text,
-			comment_revision.comment_text,
+			comment_logging.comment_text,
 			log_params,
 			log_id
 		FROM revision_userindex
