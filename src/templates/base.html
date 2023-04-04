@@ -1,15 +1,27 @@
 <!doctype html>
-<html>
+<html lang="en">
 	<head>
 		{% block head %}
-			<title>{% block title %}Title History{% endblock %}</title>
+			<title>
+				{% block title %}Title History{% endblock %}
+			</title>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0">
 			<link rel="stylesheet" href="/static/base.css" />
 			<link rel="shortcut icon" type="image/png" href="/static/favicon.png">
 		{% endblock %}
 	</head>
 	<body>
-		<h1><a href="/">Title History</a></h1>
-		<main>{% block content %}{% endblock %}</main>
+		<h1>
+			<a href="/">
+				Title History
+			</a>
+		</h1>
+		<main>
+			{% block content %}{% endblock %}
+		</main>
+		<footer>
+			Source code <a href="https://github.com/BrandonXLF/title-history">GitHub</a>.
+			Created by <a href="https://en.wikipedia.org/wiki/User:BrandonXLF">BrandonXLF</a>. 
+		</footer>
 	</body>
 </html>
