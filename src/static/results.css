@@ -49,6 +49,7 @@
 }
 
 .detail > svg {
+	flex: none;
 	margin: 0.175em 0;
 }
 
