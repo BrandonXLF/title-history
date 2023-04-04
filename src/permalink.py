@@ -52,37 +52,28 @@ def permalink(project, page_id):
 			log_namespace,
 			log_title,
 			comment_revision.comment_text,
-			comment_logging.comment_text,
+			comment_revision.comment_text,
 			log_params,
 			log_id
-		FROM (
-			SELECT *
-			FROM revision_userindex
-			JOIN logging_userindex ON
-				log_type = 'move'
-				AND log_actor = rev_actor
-				AND log_timestamp = rev_timestamp
-			UNION SELECT *
-			FROM revision_userindex
-			JOIN logging_userindex ON
-				log_type = 'move'
-				AND log_actor = rev_actor
-				AND log_timestamp = CAST(CAST(rev_timestamp AS DATETIME) + 1 AS BINARY)
-		) AS rev_log
+		FROM revision_userindex
+		JOIN logging_userindex ON
+			log_type = 'move'
+			AND log_actor = rev_actor
+			AND log_timestamp BETWEEN rev_timestamp AND CAST(CAST(rev_timestamp AS DATETIME) + 30 AS BINARY)
 		JOIN comment_revision ON
-			rev_log.rev_comment_id = comment_revision.comment_id
+			rev_comment_id = comment_revision.comment_id
 		JOIN comment_logging ON
 			log_comment_id = comment_logging.comment_id
 		JOIN actor_logging ON
 			log_actor = actor_id
 		WHERE
-			rev_log.rev_page = %s
+			rev_page = %s
 			AND EXISTS (
 				SELECT *
 				FROM revision_userindex AS p_rev
 				WHERE
-					p_rev.rev_id = rev_log.rev_parent_id
-					AND p_rev.rev_sha1 = rev_log.rev_sha1
+					p_rev.rev_id = revision_userindex.rev_parent_id
+					AND p_rev.rev_sha1 = revision_userindex.rev_sha1
 			)
 		ORDER BY log_timestamp DESC
 		''',
