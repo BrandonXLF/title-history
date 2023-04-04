@@ -2,6 +2,7 @@ from flask import Flask, render_template, send_from_directory, request
 from werkzeug.exceptions import HTTPException
 from .getfrompage import get_from_page
 from .permalink import permalink
+from .error import ProcessError
 
 app = Flask(__name__)
 
@@ -18,4 +19,9 @@ app.add_url_rule('/<project>/<page_id>', view_func = permalink)
 
 @app.errorhandler(HTTPException)
 def handle_exception(error: HTTPException):
-	return render_template('error.html', error = error), error.code
+	return render_template(
+		'error.html',
+		error = error,
+		project = getattr(error, 'project'),
+		page = getattr(error, 'page')
+	), error.code

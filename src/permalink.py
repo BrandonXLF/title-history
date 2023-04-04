@@ -1,5 +1,5 @@
 import mysql.connector
-from flask import render_template, abort
+from flask import render_template
 from datetime import datetime
 import os
 import phpserialize
@@ -7,6 +7,7 @@ import re
 from .projectinfo import get_project_info
 from .projectformatter import ProjectFormatter
 from .config import config
+from .error import ProcessError
 
 def page_in_comment(page, comment):
 	return re.compile('(\[\[| |^)' + re.escape(page) + '(\]\]| |$)').search(comment)
@@ -15,7 +16,7 @@ def permalink(project, page_id):
 	project_info = get_project_info(project)
 
 	if not project_info:
-		abort(404, f'Project {project} does not exist.')
+		raise ProcessError(f'Project {project} does not exist.', 404, project)
 
 	(project_db, project_url) = project_info
 	formatter = ProjectFormatter(project_url)
@@ -35,10 +36,10 @@ def permalink(project, page_id):
 	)
 
 	page_info = cursor.fetchone()
-	
+
 	if not page_info:
-		abort(404, f'Page with ID {page_id} does not exist.')
-	
+		raise ProcessError(f'Page with ID {page_id} does not exist.', 404, project)
+
 	page_name = formatter.format_title(page_info[0], page_info[1].decode())
 
 	# Considerations:

@@ -10,7 +10,7 @@
 		View the previous titles of a Wikipedia (or any Wikimedia project) article with details about when it was moved.
 	</p>
 	<form action="/get">
-		<input placeholder="Project (en.wikipedia.org)" name="project"{% if page %} value="{{project}}"{% endif %} />
+		<input placeholder="Project (en.wikipedia.org)" name="project"{% if project %} value="{{project}}"{% endif %} />
 		<input placeholder="Page" name="page"{% if page %} value="{{page}}"{% endif %} />
 		<input type="submit" value="Submit" />
 	</form>
