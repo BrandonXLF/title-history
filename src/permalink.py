@@ -12,7 +12,7 @@ def page_in_comment(page, comment):
 	return re.compile('(\[\[| |^)' + re.escape(page) + '(\]\]| |$)').search(comment)
 
 def permalink(project, page_id):
-	project_info = get_project_info(config, project)
+	project_info = get_project_info(project)
 
 	if not project_info:
 		abort(404, f'Project {project} does not exist.')

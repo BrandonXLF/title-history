@@ -1,6 +1,7 @@
 import mysql.connector
+from .config import config
 
-def get_project_info(config, project):
+def get_project_info(project):
 	db = mysql.connector.connect(
 		host = 'localhost' if config.getboolean('General', 'dev') else 'meta.web.db.svc.wikimedia.cloud',
 		port = 4711 if config.getboolean('General', 'dev') else 3306,

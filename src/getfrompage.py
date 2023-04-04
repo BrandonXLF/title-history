@@ -1,7 +1,6 @@
 import requests
 import urllib.parse
 from flask import request, redirect, abort
-from .config import config
 from .projectinfo import get_project_info
 
 def get_from_page():
@@ -11,7 +10,7 @@ def get_from_page():
 	if not page_title:
 		abort(400, 'Page title is required.')
 
-	project_info = get_project_info(config, project)
+	project_info = get_project_info(project)
 
 	if not project_info:
 		abort(404, f'Project {project} does not exist.')
