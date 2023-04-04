@@ -1,4 +1,6 @@
 cachelib
 configparser
 flask
+phpserialize
+requests
 mysql-connector-python
