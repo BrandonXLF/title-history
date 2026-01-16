@@ -3,6 +3,7 @@ import urllib.parse
 from flask import request, redirect
 from .projectinfo import get_project_info
 from .error import ProcessError
+from .config import config
 
 def get_from_page():
 	page_title = request.args.get('page', '')
@@ -20,8 +21,9 @@ def get_from_page():
 	project_domain = project_url.partition('//')[2]
 	encoded_title = urllib.parse.quote(page_title)
 	
-	pages = requests.get(f'{project_url}/w/api.php?action=query&titles={encoded_title}&format=json&formatversion=2')\
-		.json()['query'].get('pages')
+	pages = requests.get(f'{project_url}/w/api.php?action=query&titles={encoded_title}&format=json&formatversion=2', headers={
+		'User-Agent': config['General']['useragent']
+	}).json()['query'].get('pages')
 
 	if not pages or 'pageid' not in pages[0]:
 		raise ProcessError(f'Page with title {page_title} not found.', 404, project, page_title)

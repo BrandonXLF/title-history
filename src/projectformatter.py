@@ -3,6 +3,7 @@ import re
 import urllib.parse
 from markupsafe import escape
 from cachelib import SimpleCache
+from .config import config
 
 namespace_cache = SimpleCache()
 
@@ -20,8 +21,9 @@ class ProjectFormatter:
 
 		self.namespaces = {}
 		
-		res = requests.get(f'{self.project_url}/w/api.php?action=query&meta=siteinfo&siprop=namespaces&format=json&formatversion=2')\
-			.json()['query']['namespaces']
+		res = requests.get(f'{self.project_url}/w/api.php?action=query&meta=siteinfo&siprop=namespaces&format=json&formatversion=2', headers={
+			'User-Agent': config['General']['useragent']
+		}).json()['query']['namespaces']
 
 		for namespace in res.values():
 			self.namespaces[namespace['id']] = namespace['name']
