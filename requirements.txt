@@ -4,3 +4,4 @@ flask
 phpserialize
 requests
 mysql-connector-python
+markupsafe

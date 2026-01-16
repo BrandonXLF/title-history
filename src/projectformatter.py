@@ -1,7 +1,7 @@
 import requests
 import re
 import urllib.parse
-from flask import escape
+from markupsafe import escape
 from cachelib import SimpleCache
 
 namespace_cache = SimpleCache()
