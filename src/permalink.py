@@ -56,7 +56,7 @@ def permalink(project, page_id):
 			comment_logging.comment_text,
 			log_params,
 			log_id
-		FROM revision_userindex
+		FROM revision
 		JOIN logging_userindex ON
 			log_type = 'move'
 			AND log_actor = rev_actor
@@ -67,14 +67,28 @@ def permalink(project, page_id):
 			log_comment_id = comment_logging.comment_id
 		JOIN actor_logging ON
 			log_actor = actor_id
+		JOIN slots ON
+			rev_id = slot_revision_id
+		JOIN slot_roles ON
+			slot_role_id = role_id
+			AND role_name = 'main'
+		JOIN content ON
+			slot_content_id = content_id
 		WHERE
 			rev_page = %s
 			AND EXISTS (
 				SELECT *
-				FROM revision_userindex AS p_rev
+				FROM revision AS p_rev
+				JOIN slots AS p_slots ON
+					p_rev.rev_id = p_slots.slot_revision_id
+				JOIN slot_roles AS p_roles ON
+					p_slots.slot_role_id = p_roles.role_id
+					AND role_name = 'main'
+				JOIN content AS p_content ON
+					p_slots.slot_content_id = p_content.content_id
 				WHERE
-					p_rev.rev_id = revision_userindex.rev_parent_id
-					AND p_rev.rev_sha1 = revision_userindex.rev_sha1
+					p_rev.rev_id = revision.rev_parent_id
+					AND p_content.content_sha1 = content.content_sha1
 			)
 		ORDER BY log_timestamp DESC
 		''',
